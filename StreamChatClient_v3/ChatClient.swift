@@ -6,17 +6,34 @@
 import CoreData
 import Foundation
 
+/// If you want to use your custom extra data types to extend `UserModel`, `MessageModel`, or `ChannelModel`,
+/// you can use this protocol to set up `Client` with it.
+///
+/// Example usage:
+/// ```
+///   enum CustomDataTypes: ExtraDataTypes {
+///     typealias Channel = MyCustomChannelExtraData
+///     typealias Message = MyCustomMessageExtraData
+///   }
+///
+///   let client = Client<CustomDataTypes>(currentUser: user, config: config)
+/// ```
+///
+/// Additionally, you can introduce the following type aliases in your module to make the work with generic
+/// models more convenient:
+/// ```
+///  typealias Channel = ChannelModel<CustomDataTypes>
+///  typealias Message = MessageModel<CustomDataTypes>
+/// ```
+///
 public protocol ExtraDataTypes {
-  associatedtype Channel: Codable & Hashable
-  associatedtype User: Codable & Hashable
-  associatedtype Message: Codable & Hashable
+  associatedtype User: Codable & Hashable = NameAndAvatarUserData
+  associatedtype Message: Codable & Hashable = NoExtraMessageData
+  associatedtype Channel: Codable & Hashable = NoExtraChannelData
 }
 
-public struct DefaultDataTypes: ExtraDataTypes {
-  public typealias Channel = NoExtraChannelData
-  public typealias User = NameAndAvatarUserData
-  public typealias Message = NoExtraMessageData
-}
+/// A concrete implementation of `ExtraDataTypes` with the default values.
+public enum DefaultDataTypes: ExtraDataTypes {}
 
 public typealias ChatClient = Client<DefaultDataTypes>
 
@@ -141,7 +158,7 @@ public final class Client<ExtraData: ExtraDataTypes> {
 
     apiClient.connectionIdProvider = webSocketClient
 
-    // The background work initialization can be expensive so it's performed on a bakcground queue
+    // The background work initialization can be expensive so it's performed on a background queue
     DispatchQueue.global().async {
       self.backgroundWorkers = workers.map { builder in
         builder(self.persistentContainer.writableContext, self.webSocketClient, self.apiClient)
