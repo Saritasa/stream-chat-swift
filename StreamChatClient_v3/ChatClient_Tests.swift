@@ -9,10 +9,12 @@ import XCTest
 
 class ChatClientTests: XCTestCase {
   var user: User!
+  var queue: DispatchQueue!
 
   override func setUp() {
     super.setUp()
     user = User(id: UUID().uuidString)
+    queue = DispatchQueue(label: "test_queue")
   }
 
   // MARK: - Database stack tests
@@ -31,7 +33,7 @@ class ChatClientTests: XCTestCase {
       return DatabaseContainerMock()
     }
 
-    _ = ChatClient(currentUser: user, config: config, workers: [], environment: env).persistentContainer
+    _ = ChatClient(currentUser: user, config: config, workers: [], callbackQueue: queue, environment: env).persistentContainer
 
     XCTAssertEqual(usedDatabaseKind, .onDisk(databaseFileURL: storeFolderURL.appendingPathComponent(user.id)))
   }
@@ -48,7 +50,7 @@ class ChatClientTests: XCTestCase {
       return DatabaseContainerMock()
     }
 
-    _ = ChatClient(currentUser: user, config: config, workers: [], environment: env).persistentContainer
+    _ = ChatClient(currentUser: user, config: config, workers: [], callbackQueue: queue, environment: env).persistentContainer
 
     XCTAssertEqual(usedDatabaseKind, .inMemory)
   }
@@ -76,7 +78,7 @@ class ChatClientTests: XCTestCase {
       return DatabaseContainerMock()
     }
 
-    _ = ChatClient(currentUser: user, config: config, workers: [], environment: env).persistentContainer
+    _ = ChatClient(currentUser: user, config: config, workers: [], callbackQueue: queue, environment: env).persistentContainer
 
     XCTAssertEqual(
       usedDatabaseKinds,

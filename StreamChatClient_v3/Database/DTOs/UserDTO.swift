@@ -10,8 +10,8 @@ import Foundation
 public class UserDTO: NSManagedObject {
   static let entityName = "UserDTO"
 
-  @NSManaged fileprivate var id: String
-  @NSManaged fileprivate var extraData: Data?
+  @NSManaged var id: String
+  @NSManaged var extraData: Data?
 
   /// If an User with the given id exists in the context, fetches and returns it. Otherwise create a new
   /// `UserDTO` with the given id.
@@ -34,27 +34,13 @@ public class UserDTO: NSManagedObject {
   }
 }
 
-// To save the data to the DB
-
-extension UserModel {
-  @discardableResult
-  func save(to context: NSManagedObjectContext) -> UserDTO {
-    let dto = UserDTO.with(id: id, context: context)
-
-    if let extraData = extraData {
-      dto.extraData = try? JSONEncoder.default.encode(extraData)
-    }
-
-    return dto
+extension NSManagedObjectContext {
+  func saveUser<ExtraUserData: Codable & Hashable>(_ user: UserModel<ExtraUserData>) {
+    let _: UserDTO = saveUser(user)
   }
-}
 
-// To save the data to the DB
-
-extension MemberEndpointResponse {
-  @discardableResult
-  func save(to context: NSManagedObjectContext) -> UserDTO {
-    let dto = UserDTO.with(id: user.id, context: context)
+  func saveUser<ExtraUserData: Codable & Hashable>(_ user: UserModel<ExtraUserData>) -> UserDTO {
+    let dto = UserDTO.with(id: user.id, context: self)
 
     if let extraData = user.extraData {
       dto.extraData = try? JSONEncoder.default.encode(extraData)
@@ -62,14 +48,31 @@ extension MemberEndpointResponse {
 
     return dto
   }
+
+  func saveUser<ExtraUserData: Codable & Hashable>(endpointResponse response: UserEndpointReponse<ExtraUserData>) {
+    let _: UserDTO = saveUser(endpointResponse: response)
+  }
+
+  func saveUser<ExtraUserData: Codable & Hashable>(endpointResponse response: UserEndpointReponse<ExtraUserData>) -> UserDTO {
+    let dto = UserDTO.with(id: response.id, context: self)
+    if let extraData = response.extraData {
+      dto.extraData = try? JSONEncoder.default.encode(extraData)
+    }
+    return dto
+  }
+
+  func loadUser<ExtraUserData: Codable & Hashable>(id: String) -> UserModel<ExtraUserData> {
+    let dto = UserDTO.with(id: id, context: self)
+    var user = UserModel<ExtraUserData>(id: dto.id)
+    user.extraData = try? JSONDecoder.default.decode(ExtraUserData.self, from: dto.extraData!) // TODO: How to handle error here?
+    return user
+  }
 }
 
-// To get the data from the DB
-
-extension UserModel {
-  init(from dto: UserDTO) {
-    self.id = dto.id
+extension UserModel: LoadableEntity {
+  init(fromDTO entity: UserDTO) {
+    self.id = entity.id
     self.extraData = try? JSONDecoder.default
-      .decode(ExtraData.self, from: dto.extraData!) // how to handle failure here?
+      .decode(ExtraData.self, from: entity.extraData!) // how to handle failure here?
   }
 }

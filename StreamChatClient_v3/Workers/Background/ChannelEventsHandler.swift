@@ -9,8 +9,8 @@ import CoreData
 class ChannelEventsHandler<ExtraData: ExtraDataTypes>: EventHandlerWorker<ExtraData> {
   override func handleNewEvent(event: Event) {
     if let event = event as? AddedToChannel<ExtraData> {
-      database.write { context in
-        event.channel.save(to: context)
+      database.write { session in
+        session.saveChannel(event.channel)
       }
     }
   }

@@ -32,39 +32,39 @@ class ChannelDTO: NSManagedObject {
   }
 }
 
-extension ChannelModel {
-  @discardableResult
-  func save(to context: NSManagedObjectContext) -> ChannelDTO {
-    let dto = ChannelDTO.with(id: id, context: context)
-    if let extraData = extraData {
-      dto.extraData = try? JSONEncoder.default.encode(extraData)
-    }
-
-    members.forEach {
-      let user = $0.save(to: context)
-      dto.members.insert(user)
-    }
-
-    return dto
-  }
-}
-
-// To save incoming data to DB
-
-extension ChannelEndpointResponse {
-  @discardableResult
-  func save(to context: NSManagedObjectContext) -> ChannelDTO {
-    let dto = ChannelDTO.with(id: channel.id, context: context)
+extension NSManagedObjectContext {
+  func saveChannel<ExtraData: ExtraDataTypes>(_ channel: ChannelModel<ExtraData>) {
+    let dto = ChannelDTO.with(id: channel.id, context: self)
     if let extraData = channel.extraData {
       dto.extraData = try? JSONEncoder.default.encode(extraData)
     }
 
-    members.forEach {
-      let user = $0.save(to: context)
+    channel.members.forEach {
+      let user: UserDTO = self.saveUser($0)
       dto.members.insert(user)
     }
+  }
 
-    return dto
+  func saveChannel<ExtraData: ExtraDataTypes>(endpointResponse response: ChannelEndpointResponse<ExtraData>) {
+    let dto = ChannelDTO.with(id: response.channel.id, context: self)
+    if let extraData = response.channel.extraData {
+      dto.extraData = try? JSONEncoder.default.encode(extraData)
+    }
+
+    // TEMP
+    response.members.map { $0.user }.forEach {
+      let user: UserDTO = saveUser(endpointResponse: $0)
+      dto.members.insert(user)
+    }
+  }
+
+  func loadChannel<ExtraData: ExtraDataTypes>(id: String) -> ChannelModel<ExtraData> {
+    let dto = ChannelDTO.with(id: id, context: self)
+
+    let members: [UserModel<ExtraData.User>] = dto.members.map { self.loadUser(id: $0.id) }
+    let extraData = try? JSONDecoder.default.decode(ExtraData.Channel.self, from: dto.extraData!) // TODO: handle error
+
+    return ChannelModel<ExtraData>(id: dto.id, extraData: extraData, members: Set(members))
   }
 }
 
@@ -77,10 +77,12 @@ extension ChannelModel {
     request.predicate = nil // TODO: Filter -> NSPredicate
     return request
   }
+}
 
+extension ChannelModel: LoadableEntity {
   /// Create a Channel struct from its DTO
-  init(dto: ChannelDTO) {
-    id = dto.id
-    members = Set(dto.members.map(UserModel<ExtraData.User>.init))
+  init(fromDTO entity: ChannelDTO) {
+    id = entity.id
+    members = Set(entity.members.map(UserModel<ExtraData.User>.init))
   }
 }

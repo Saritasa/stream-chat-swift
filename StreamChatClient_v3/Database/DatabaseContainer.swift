@@ -69,7 +69,7 @@ class DatabaseContainer: NSPersistentContainer {
 
 extension DatabaseContainer {
   /// Use this method to safely mutate the content of the database.
-  func write(_ actions: @escaping (NSManagedObjectContext) -> Void) {
+  func write(_ actions: @escaping (DatabaseSession) -> Void) {
     writableContext.perform {
       actions(self.writableContext)
 
@@ -83,4 +83,25 @@ extension DatabaseContainer {
       }
     }
   }
+}
+
+extension NSManagedObjectContext: DatabaseSession {}
+
+protocol DatabaseSession {
+  // MARK: -  User model
+
+  func saveUser<ExtraUserData: Codable & Hashable>(_ user: UserModel<ExtraUserData>)
+  func saveUser<ExtraUserData: Codable & Hashable>(endpointResponse response: UserEndpointReponse<ExtraUserData>)
+  func loadUser<ExtraUserData: Codable & Hashable>(id: String) -> UserModel<ExtraUserData>
+
+  // MARK: -  Channel model
+
+  func saveChannel<ExtraData: ExtraDataTypes>(_ channel: ChannelModel<ExtraData>)
+  func saveChannel<ExtraData: ExtraDataTypes>(endpointResponse response: ChannelEndpointResponse<ExtraData>)
+  func loadChannel<ExtraData: ExtraDataTypes>(id: String) -> ChannelModel<ExtraData>
+}
+
+protocol LoadableEntity {
+  associatedtype DTOEntity
+  init(fromDTO entity: DTOEntity)
 }

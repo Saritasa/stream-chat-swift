@@ -19,8 +19,10 @@ class ChannelQuerryUpdater<ExtraData: ExtraDataTypes>: Worker {
     { (result: Result<ChannelListEndpointResponse<ExtraData>, Error>) in
       switch result {
       case .success(let channelListDTO):
-        self.database.write { context in
-          channelListDTO.channels.forEach { $0.save(to: context) }
+        self.database.write { session in
+          channelListDTO.channels.forEach {
+            session.saveChannel(endpointResponse: $0)
+          }
         }
 
       case .failure(let error):
