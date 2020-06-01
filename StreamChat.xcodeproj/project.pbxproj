@@ -19,6 +19,7 @@
 		79273EC2246EB64E00B0A574 /* AssertJSONEqual.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79273EC1246EB64E00B0A574 /* AssertJSONEqual.swift */; };
 		79273EC3246EB64E00B0A574 /* AssertJSONEqual.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79273EC1246EB64E00B0A574 /* AssertJSONEqual.swift */; };
 		79273EC4246EB64E00B0A574 /* AssertJSONEqual.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79273EC1246EB64E00B0A574 /* AssertJSONEqual.swift */; };
+		79280F3F2484E3BA00CDEB89 /* ClientError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79280F3E2484E3BA00CDEB89 /* ClientError.swift */; };
 		792A4F1B247FE84900EAF71D /* ChannelQueryUpdater.swift in Sources */ = {isa = PBXBuildFile; fileRef = 792A4F1A247FE84900EAF71D /* ChannelQueryUpdater.swift */; };
 		792A4F1D247FEA2200EAF71D /* ChannelListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 792A4F1C247FEA2200EAF71D /* ChannelListController.swift */; };
 		792A4F25247FF01800EAF71D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 792A4F24247FF01800EAF71D /* AppDelegate.swift */; };
@@ -394,6 +395,7 @@
 		79273EB5246AE1EF00B0A574 /* Client_SilentMessageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Client_SilentMessageTests.swift; sourceTree = "<group>"; };
 		79273EB9246AEC9200B0A574 /* SharedClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedClient.swift; sourceTree = "<group>"; };
 		79273EC1246EB64E00B0A574 /* AssertJSONEqual.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssertJSONEqual.swift; sourceTree = "<group>"; };
+		79280F3E2484E3BA00CDEB89 /* ClientError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientError.swift; sourceTree = "<group>"; };
 		792A4F1A247FE84900EAF71D /* ChannelQueryUpdater.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelQueryUpdater.swift; sourceTree = "<group>"; };
 		792A4F1C247FEA2200EAF71D /* ChannelListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelListController.swift; sourceTree = "<group>"; };
 		792A4F22247FF01800EAF71D /* V3SampleApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = V3SampleApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -842,6 +844,14 @@
 			path = "Virtual Time";
 			sourceTree = "<group>";
 		};
+		79280F3D2484E33C00CDEB89 /* Errors */ = {
+			isa = PBXGroup;
+			children = (
+				79280F3E2484E3BA00CDEB89 /* ClientError.swift */,
+			);
+			path = Errors;
+			sourceTree = "<group>";
+		};
 		792A4F18247EA97000EAF71D /* DTOs */ = {
 			isa = PBXGroup;
 			children = (
@@ -925,6 +935,7 @@
 				799C9430247D2FB9001F1104 /* Models */,
 				799C944A247D574F001F1104 /* Controllers */,
 				792A4F412480103A00EAF71D /* Query */,
+				79280F3D2484E33C00CDEB89 /* Errors */,
 				792A4F3A247FFB7600EAF71D /* Utils */,
 				799C941D247D2F80001F1104 /* StreamChatClient_v3.h */,
 				799C941E247D2F80001F1104 /* Info.plist */,
@@ -2156,6 +2167,7 @@
 				792A4F3C247FFBB400EAF71D /* Timers.swift in Sources */,
 				792A4F482480107A00EAF71D /* Pagination.swift in Sources */,
 				792A4F532480F5AD00EAF71D /* ChannelEndpointResponse.swift in Sources */,
+				79280F3F2484E3BA00CDEB89 /* ClientError.swift in Sources */,
 				792A4F512480F55800EAF71D /* ChannelListEndpointResponse.swift in Sources */,
 				797A756424814E7A003CF16D /* WebSocketPayload.swift in Sources */,
 				799C945E247D7283001F1104 /* DatabaseContainer.swift in Sources */,

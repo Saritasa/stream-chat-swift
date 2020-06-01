@@ -120,27 +120,38 @@ public final class Client<ExtraData: ExtraDataTypes> {
   }()
 
   private(set) lazy var persistentContainer: DatabaseContainer = {
-    if config.isLocalStorageEnabled {
-      // Create the folder if needed
-      try? FileManager.default.createDirectory(
-        at: config.localStorageFolderURL,
-        withIntermediateDirectories: true,
-        attributes: nil
-      )
-      let dbFileURL = config.localStorageFolderURL.appendingPathComponent(currentUser.id)
+    do {
+      if config.isLocalStorageEnabled {
+        guard let storeURL = config.localStorageFolderURL else {
+          throw ClientError.MissingLocalStorageURL()
+        }
 
-      do {
+        // Create the folder if needed
+        try? FileManager.default.createDirectory(
+          at: config.localStorageFolderURL!,
+          withIntermediateDirectories: true,
+          attributes: nil
+        )
+        let dbFileURL = config.localStorageFolderURL!.appendingPathComponent(currentUser.id)
         return try environment.databaseContainerBuilder(.onDisk(databaseFileURL: dbFileURL))
-      } catch {
-        // TODO: Log
-        print("Failed to initalized the local storage with error: \(error). Falling back to the in-memory option.")
       }
+
+      // Example error handling:
+
+    } catch let error as ClientError.MissingLocalStorageURL {
+      assertionFailure("The URL provided in ChatClientConfig can't be `nil`.")
+
+    } catch {
+      let handledError = ClientError.Unexpect(underlyingError: error)
+      let handledError2 = ClientError.Unexpect("Something went wrong...")
+      // TODO: Log
+      print("Failed to initalized the local storage with error: \(error). Falling back to the in-memory option.")
     }
 
     do {
       return try environment.databaseContainerBuilder(.inMemory)
     } catch {
-      fatalError("Failed to initialize the in-memory storage. This is a non-recoverable error.")
+      fatalError("Failed to initialize the in-memory storage with erorr: \(error). This is a non-recoverable error.")
     }
   }()
 

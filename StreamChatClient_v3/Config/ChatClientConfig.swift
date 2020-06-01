@@ -16,15 +16,14 @@ import Foundation
 ///
 public struct ChatClientConfig {
   /// The folder ChatClient uses to store its database files.
-  public var localStorageFolderURL: URL = {
+  public var localStorageFolderURL: URL? = {
     let urls = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
-    // TODO: log error?
-    return urls.first!
+    return urls.first
   }()
 
-  public var apiKey: String
+  public let apiKey: String
 
-  public var baseURL: URL = URL(string: "https://chat-proxy-us-east.stream-io-api.com/")!
+  public var baseURL: BaseURL = .dublin
 
   public var isLocalStorageEnabled: Bool = true
 
