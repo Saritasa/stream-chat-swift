@@ -13,18 +13,21 @@ public class UserDTO: NSManagedObject {
   @NSManaged var id: String
   @NSManaged var extraData: Data?
 
-  /// If an User with the given id exists in the context, fetches and returns it. Otherwise create a new
+  static func load(id: String, context: NSManagedObjectContext) -> UserDTO? {
+    let request = NSFetchRequest<UserDTO>(entityName: UserDTO.entityName)
+    request.predicate = NSPredicate(format: "id == %@", id)
+    return try? context.fetch(request).first
+  }
+
+  /// If a User with the given id exists in the context, fetches and returns it. Otherwise create a new
   /// `UserDTO` with the given id.
   ///
   /// - Parameters:
   ///   - id: The id of the user to fetch
   ///   - context: The context used to fetch/create `UserDTO`
   ///
-  static func with(id: String, context: NSManagedObjectContext) -> UserDTO {
-    let request = NSFetchRequest<UserDTO>(entityName: UserDTO.entityName)
-    request.predicate = NSPredicate(format: "id == %@", id)
-
-    if let existing = try? context.fetch(request).first {
+  static func loadOrCreate(id: String, context: NSManagedObjectContext) -> UserDTO {
+    if let existing = Self.load(id: id, context: context) {
       return existing
     }
 
@@ -40,7 +43,7 @@ extension NSManagedObjectContext {
   }
 
   func saveUser<ExtraUserData: Codable & Hashable>(_ user: UserModel<ExtraUserData>) -> UserDTO {
-    let dto = UserDTO.with(id: user.id, context: self)
+    let dto = UserDTO.loadOrCreate(id: user.id, context: self)
 
     if let extraData = user.extraData {
       dto.extraData = try? JSONEncoder.default.encode(extraData)
@@ -54,17 +57,21 @@ extension NSManagedObjectContext {
   }
 
   func saveUser<ExtraUserData: Codable & Hashable>(endpointResponse response: UserEndpointReponse<ExtraUserData>) -> UserDTO {
-    let dto = UserDTO.with(id: response.id, context: self)
+    let dto = UserDTO.loadOrCreate(id: response.id, context: self)
     if let extraData = response.extraData {
       dto.extraData = try? JSONEncoder.default.encode(extraData)
     }
     return dto
   }
 
-  func loadUser<ExtraUserData: Codable & Hashable>(id: String) -> UserModel<ExtraUserData> {
-    let dto = UserDTO.with(id: id, context: self)
+  func loadUser<ExtraUserData: Codable & Hashable>(id: String) -> UserModel<ExtraUserData>? {
+    guard let dto = UserDTO.load(id: id, context: self) else { return nil }
     var user = UserModel<ExtraUserData>(id: dto.id)
-    user.extraData = try? JSONDecoder.default.decode(ExtraUserData.self, from: dto.extraData!) // TODO: How to handle error here?
+    var extraData: ExtraUserData?
+    if let dtoExtraData = dto.extraData {
+      extraData = try? JSONDecoder.default.decode(ExtraUserData.self, from: dtoExtraData)
+    }
+    user.extraData = extraData
     return user
   }
 }

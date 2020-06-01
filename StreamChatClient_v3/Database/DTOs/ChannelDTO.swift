@@ -18,11 +18,14 @@ class ChannelDTO: NSManagedObject {
   // This should eventually use `MemberDTO` when we have it
   @NSManaged fileprivate var members: Set<UserDTO>
 
-  static func with(id: String, context: NSManagedObjectContext) -> ChannelDTO {
+  static func load(id: String, context: NSManagedObjectContext) -> ChannelDTO? {
     let request = NSFetchRequest<ChannelDTO>(entityName: ChannelDTO.entityName)
     request.predicate = NSPredicate(format: "id == %@", id)
+    return try? context.fetch(request).first
+  }
 
-    if let existing = try? context.fetch(request).first {
+  static func loadOrCreate(id: String, context: NSManagedObjectContext) -> ChannelDTO {
+    if let existing = Self.load(id: id, context: context) {
       return existing
     }
 
@@ -34,7 +37,7 @@ class ChannelDTO: NSManagedObject {
 
 extension NSManagedObjectContext {
   func saveChannel<ExtraData: ExtraDataTypes>(_ channel: ChannelModel<ExtraData>) {
-    let dto = ChannelDTO.with(id: channel.id, context: self)
+    let dto = ChannelDTO.loadOrCreate(id: channel.id, context: self)
     if let extraData = channel.extraData {
       dto.extraData = try? JSONEncoder.default.encode(extraData)
     }
@@ -46,7 +49,7 @@ extension NSManagedObjectContext {
   }
 
   func saveChannel<ExtraData: ExtraDataTypes>(endpointResponse response: ChannelEndpointResponse<ExtraData>) {
-    let dto = ChannelDTO.with(id: response.channel.id, context: self)
+    let dto = ChannelDTO.loadOrCreate(id: response.channel.id, context: self)
     if let extraData = response.channel.extraData {
       dto.extraData = try? JSONEncoder.default.encode(extraData)
     }
@@ -58,11 +61,15 @@ extension NSManagedObjectContext {
     }
   }
 
-  func loadChannel<ExtraData: ExtraDataTypes>(id: String) -> ChannelModel<ExtraData> {
-    let dto = ChannelDTO.with(id: id, context: self)
+  func loadChannel<ExtraData: ExtraDataTypes>(id: String) -> ChannelModel<ExtraData>? {
+    guard let dto = ChannelDTO.load(id: id, context: self) else { return nil }
 
-    let members: [UserModel<ExtraData.User>] = dto.members.map { self.loadUser(id: $0.id) }
-    let extraData = try? JSONDecoder.default.decode(ExtraData.Channel.self, from: dto.extraData!) // TODO: handle error
+    let members: [UserModel<ExtraData.User>] = dto.members.compactMap { self.loadUser(id: $0.id) }
+
+    var extraData: ExtraData.Channel?
+    if let dtoExtraData = dto.extraData {
+      extraData = try? JSONDecoder.default.decode(ExtraData.Channel.self, from: dtoExtraData)
+    }
 
     return ChannelModel<ExtraData>(id: dto.id, extraData: extraData, members: Set(members))
   }

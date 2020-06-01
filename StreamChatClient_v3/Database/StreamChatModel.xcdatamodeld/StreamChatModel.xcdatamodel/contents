@@ -4,7 +4,7 @@
         <attribute name="extraData" optional="YES" attributeType="Binary"/>
         <attribute name="id" optional="YES" attributeType="String"/>
         <attribute name="name" optional="YES" attributeType="String"/>
-        <relationship name="members" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="UserDTO" inverseName="channels" inverseEntity="UserDTO"/>
+        <relationship name="members" toMany="YES" deletionRule="Nullify" destinationEntity="UserDTO" inverseName="channels" inverseEntity="UserDTO"/>
         <uniquenessConstraints>
             <uniquenessConstraint>
                 <constraint value="id"/>

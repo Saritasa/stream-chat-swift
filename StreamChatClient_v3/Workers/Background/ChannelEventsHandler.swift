@@ -13,5 +13,7 @@ class ChannelEventsHandler<ExtraData: ExtraDataTypes>: EventHandlerWorker<ExtraD
         session.saveChannel(event.channel)
       }
     }
+
+    // TODO: more events
   }
 }

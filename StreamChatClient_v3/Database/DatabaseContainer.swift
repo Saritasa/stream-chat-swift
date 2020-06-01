@@ -92,13 +92,13 @@ protocol DatabaseSession {
 
   func saveUser<ExtraUserData: Codable & Hashable>(_ user: UserModel<ExtraUserData>)
   func saveUser<ExtraUserData: Codable & Hashable>(endpointResponse response: UserEndpointReponse<ExtraUserData>)
-  func loadUser<ExtraUserData: Codable & Hashable>(id: String) -> UserModel<ExtraUserData>
+  func loadUser<ExtraUserData: Codable & Hashable>(id: String) -> UserModel<ExtraUserData>?
 
   // MARK: -  Channel model
 
   func saveChannel<ExtraData: ExtraDataTypes>(_ channel: ChannelModel<ExtraData>)
   func saveChannel<ExtraData: ExtraDataTypes>(endpointResponse response: ChannelEndpointResponse<ExtraData>)
-  func loadChannel<ExtraData: ExtraDataTypes>(id: String) -> ChannelModel<ExtraData>
+  func loadChannel<ExtraData: ExtraDataTypes>(id: String) -> ChannelModel<ExtraData>?
 }
 
 protocol LoadableEntity {

@@ -22,7 +22,11 @@ public struct AddedToChannel<ExtraData: ExtraDataTypes>: ChannelEvent {
     guard let channel = eventResponse.channel else {
       throw ClientError.EventDecodingError("`chnannel` field can't be `nil` for the RemovedFromChannel event.")
     }
-    self.channel = ChannelModel(from: channel)
+    self.init(channel: ChannelModel(from: channel))
+  }
+
+  init(channel: ChannelModel<ExtraData>) {
+    self.channel = channel
   }
 }
 
