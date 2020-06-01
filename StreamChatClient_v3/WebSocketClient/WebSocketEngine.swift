@@ -5,7 +5,7 @@
 
 import Foundation
 
-protocol WebSocketEngine {
+protocol WebSocketEngine: AnyObject {
   var request: URLRequest { get }
   var isConnected: Bool { get }
   var callbackQueue: DispatchQueue { get }

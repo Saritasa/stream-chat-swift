@@ -20,6 +20,16 @@ public struct UserModel<ExtraData: Codable & Hashable> {
   /// of `UserModel<ExtraData>.`
   public var extraData: ExtraData?
 
+  /// Creates a new `User` object.
+  ///
+  /// - Parameter id: The id of the user.
+  ///
+  public init(id: String) {
+    self.id = id
+  }
+}
+
+extension UserModel {
   public subscript<T>(dynamicMember keyPath: KeyPath<ExtraData, T>) -> T? {
     extraData?[keyPath: keyPath]
   }
@@ -27,14 +37,6 @@ public struct UserModel<ExtraData: Codable & Hashable> {
   public subscript<T>(dynamicMember keyPath: WritableKeyPath<ExtraData, T?>) -> T? {
     get { extraData?[keyPath: keyPath] }
     set { extraData?[keyPath: keyPath] = newValue }
-  }
-
-  /// Creates a new `User` object.
-  ///
-  /// - Parameter id: The id of the user.
-  ///
-  public init(id: String) {
-    self.id = id
   }
 }
 
@@ -70,7 +72,6 @@ public extension User {
   ///
   init(id: String, name: String?, avatarURL: URL?) {
     self.init(id: id)
-    self.name = name
-    self.avatarURL = avatarURL
+    self.extraData = NameAndAvatarUserData(name: name, avatarURL: avatarURL)
   }
 }

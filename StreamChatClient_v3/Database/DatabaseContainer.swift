@@ -17,7 +17,7 @@ class DatabaseContainer: NSPersistentContainer {
     case onDisk(databaseFileURL: URL)
   }
 
-  lazy var writableContext: NSManagedObjectContext = {
+  private lazy var writableContext: NSManagedObjectContext = {
     let context = newBackgroundContext()
     context.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
     return context
@@ -64,5 +64,23 @@ class DatabaseContainer: NSPersistentContainer {
 
     viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
     viewContext.automaticallyMergesChangesFromParent = true
+  }
+}
+
+extension DatabaseContainer {
+  /// Use this method to safely mutate the content of the database.
+  func write(_ actions: @escaping (NSManagedObjectContext) -> Void) {
+    writableContext.perform {
+      actions(self.writableContext)
+
+      if self.writableContext.hasChanges {
+        do {
+          try self.writableContext.save()
+          print("Saved")
+        } catch {
+          fatalError("\(error)")
+        }
+      }
+    }
   }
 }

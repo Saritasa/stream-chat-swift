@@ -35,6 +35,7 @@ public protocol ExtraDataTypes {
 /// A concrete implementation of `ExtraDataTypes` with the default values.
 public enum DefaultDataTypes: ExtraDataTypes {}
 
+/// A convenience typealias for `Client` with the default data types.
 public typealias ChatClient = Client<DefaultDataTypes>
 
 /// The root object representing a Stream Chat.
@@ -49,17 +50,20 @@ public final class Client<ExtraData: ExtraDataTypes> {
 
   public let config: ChatClientConfig
 
-  public convenience init(currentUser: UserModel<ExtraData.User>, config: ChatClientConfig) {
+  public let callbackQueue: DispatchQueue
+
+  public convenience init(currentUser: UserModel<ExtraData.User>, config: ChatClientConfig, callbackQueue: DispatchQueue? = nil) {
     // All production workers
     let workers: [WorkerBuilder] = [
       MessageSender.init,
-      ChannelQuerryUpdater<ExtraData>.init
+      ChannelEventsHandler<ExtraData>.init
     ]
 
     self.init(
       currentUser: currentUser,
       config: config,
       workers: workers,
+      callbackQueue: callbackQueue ?? DispatchQueue(label: "io.getstream.chat.core.mainCallbackQueue"),
       environment: .init()
     )
   }
@@ -69,7 +73,8 @@ public final class Client<ExtraData: ExtraDataTypes> {
   struct Environment {
     var apiClientBuilder: (_ apiKey: String, _ baseURL: URL, _ sessionConfiguration: URLSessionConfiguration)
       -> APIClient = APIClient.init
-    var webSocketClientBuilder: (_ urlRequest: URLRequest) -> WebSocketClient = WebSocketClient.init
+    var webSocketClientBuilder: (_ urlRequest: URLRequest, _ eventDecoder: AnyEventDecoder, _ callbackQueue: DispatchQueue)
+      -> WebSocketClient = { WebSocketClient(urlRequest: $0, eventDecoder: $1, callbackQueue: $2) }
     var databaseContainerBuilder: (_ kind: DatabaseContainer.Kind) throws
       -> DatabaseContainer = { try DatabaseContainer(kind: $0) }
   }
@@ -116,7 +121,11 @@ public final class Client<ExtraData: ExtraDataTypes> {
     //      let webSocketOptions: WebSocketOptions = [] // = stayConnectedInBackground ? WebSocketOptions.stayConnectedInBackground : []
     //      let webSocketProvider = defaultWebSocketProviderType.init(request: request, callbackQueue: callbackQueue)
 
-    return WebSocketClient(urlRequest: request)
+    return WebSocketClient(
+      urlRequest: request,
+      eventDecoder: EventDecoder<ExtraData>(),
+      callbackQueue: callbackQueue
+    )
   }()
 
   private(set) lazy var persistentContainer: DatabaseContainer = {
@@ -161,24 +170,23 @@ public final class Client<ExtraData: ExtraDataTypes> {
     currentUser: UserModel<ExtraData.User>,
     config: ChatClientConfig,
     workers: [WorkerBuilder],
+    callbackQueue: DispatchQueue,
     environment: Environment
   ) {
     self.config = config
     self.currentUser = currentUser
     self.environment = environment
+    self.callbackQueue = callbackQueue
 
     apiClient.connectionIdProvider = webSocketClient
 
-    // The background work initialization can be expensive so it's performed on a background queue
-    DispatchQueue.global().async {
-      self.backgroundWorkers = workers.map { builder in
-        builder(self.persistentContainer.writableContext, self.webSocketClient, self.apiClient)
-      }
+    self.backgroundWorkers = workers.map { builder in
+      builder(self.persistentContainer, self.webSocketClient, self.apiClient)
     }
   }
 }
 
-// MARKL: ========= TEMPORARY!
+// MARK: ========= TEMPORARY!
 
 extension Client {
   var baseURL: BaseURL { .dublin }
@@ -214,5 +222,12 @@ extension Client {
     }
 
     return headers
+  }
+}
+
+extension ClientError {
+  // An example of a simple error
+  public class MissingLocalStorageURL: ClientError {
+    public let localizedDescription: String = "The URL provided in ChatClientConfig is `nil`."
   }
 }

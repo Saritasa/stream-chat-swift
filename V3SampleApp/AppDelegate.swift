@@ -11,7 +11,7 @@ import UIKit
 
 let chatClient: ChatClient = {
     var config = ChatClientConfig(apiKey: "qk4nn7rpcn75")
-//    config.isLocalStorageEnabled = false
+    config.isLocalStorageEnabled = false
     
     let user = User(id: "broken-waterfall-5", name: "Tester", avatarURL: nil)
     return ChatClient(currentUser: user, config: config)

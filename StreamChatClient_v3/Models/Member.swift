@@ -5,6 +5,8 @@
 
 import Foundation
 
+// WIP
+
 public typealias Member = MemberModel<NameAndAvatarUserData>
 
 public struct MemberModel<ExtraData: Codable & Hashable> {

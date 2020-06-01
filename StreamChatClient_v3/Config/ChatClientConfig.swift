@@ -15,13 +15,13 @@ import Foundation
 ///   ```
 ///
 public struct ChatClientConfig {
+  public let apiKey: String
+
   /// The folder ChatClient uses to store its database files.
   public var localStorageFolderURL: URL? = {
     let urls = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
     return urls.first
   }()
-
-  public let apiKey: String
 
   public var baseURL: BaseURL = .dublin
 

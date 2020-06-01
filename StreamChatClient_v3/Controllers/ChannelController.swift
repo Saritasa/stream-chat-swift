@@ -9,10 +9,8 @@ import Foundation
 ///
 ///  ... you can do this and that
 ///
-public class ChannelController<ExtraData: ExtraDataTypes> {
+public class ChannelController<ExtraData: ExtraDataTypes>: Controller {
   // MARK: - Public
-
-  public init(channelId: String, client: Client<ExtraData>) {}
 }
 
 extension Client {
@@ -22,6 +20,6 @@ extension Client {
   /// - Returns: A new instance of `ChannelController`.
   ///
   public func channelController(for channelId: String) -> ChannelController<ExtraData> {
-    .init(channelId: channelId, client: self)
+    .init()
   }
 }

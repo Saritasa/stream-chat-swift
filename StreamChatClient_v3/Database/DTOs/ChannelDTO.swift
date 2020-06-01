@@ -32,6 +32,23 @@ class ChannelDTO: NSManagedObject {
   }
 }
 
+extension ChannelModel {
+  @discardableResult
+  func save(to context: NSManagedObjectContext) -> ChannelDTO {
+    let dto = ChannelDTO.with(id: id, context: context)
+    if let extraData = extraData {
+      dto.extraData = try? JSONEncoder.default.encode(extraData)
+    }
+
+    members.forEach {
+      let user = $0.save(to: context)
+      dto.members.insert(user)
+    }
+
+    return dto
+  }
+}
+
 // To save incoming data to DB
 
 extension ChannelEndpointResponse {

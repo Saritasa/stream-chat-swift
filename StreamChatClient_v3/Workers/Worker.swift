@@ -7,22 +7,44 @@ import CoreData
 import Foundation
 
 typealias WorkerBuilder = (
-  _ storageContext: NSManagedObjectContext,
+  _ database: DatabaseContainer,
   _ webSocketClient: WebSocketClient,
   _ apiClient: APIClient
 ) -> Worker
 
-// This is a super-class instead of protocol because:
-// - we need to be sure, `unowned` is used for socket client and api client
-// - it's painfull to work with protocols with associated types
+// This is a super-class instead of protocol because we need to be sure, `unowned` is used for socket client and api client
 class Worker {
-  let context: NSManagedObjectContext
+  unowned let database: DatabaseContainer
   unowned let webSocketClient: WebSocketClient
   unowned let apiClient: APIClient
 
-  init(storageContext: NSManagedObjectContext, webSocketClient: WebSocketClient, apiClient: APIClient) {
-    self.context = storageContext
+  init(database: DatabaseContainer, webSocketClient: WebSocketClient, apiClient: APIClient) {
+    self.database = database
     self.webSocketClient = webSocketClient
     self.apiClient = apiClient
+  }
+}
+
+/// A convenience superclass for all event-based workers. Not meant to be used directly. Override `handleNewEvent(event: Event)`
+/// and provide your custom logic there.
+class EventHandlerWorker<ExtraData: ExtraDataTypes>: Worker {
+  override init(database: DatabaseContainer, webSocketClient: WebSocketClient, apiClient: APIClient) {
+    super.init(database: database, webSocketClient: webSocketClient, apiClient: apiClient)
+
+    webSocketClient.notificationCenter
+      .addObserver(self, selector: #selector(handleNewEventNotification), name: .NewEventReceived, object: nil)
+  }
+
+  @objc
+  private func handleNewEventNotification(_ notification: Notification) {
+    guard let event = notification.event else {
+      print("Error: NewEventNotification without an Event.")
+      return
+    }
+    handleNewEvent(event: event)
+  }
+
+  func handleNewEvent(event: Event) {
+    fatalError("handleNewEvent needs to be overriden")
   }
 }

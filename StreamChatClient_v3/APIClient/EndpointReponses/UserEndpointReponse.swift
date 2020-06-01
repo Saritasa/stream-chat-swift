@@ -67,3 +67,10 @@ struct UserEndpointReponse<ExtraData: Codable & Hashable>: Decodable, Hashable {
     self.extraData = try? ExtraData(from: decoder)
   }
 }
+
+extension UserModel {
+  init(endpointResponse: UserEndpointReponse<ExtraData>) {
+    id = endpointResponse.id
+    extraData = endpointResponse.extraData
+  }
+}

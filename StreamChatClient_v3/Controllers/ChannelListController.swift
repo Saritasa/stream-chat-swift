@@ -10,14 +10,17 @@ import Foundation
 ///
 ///  ... you can do this and that
 ///
-public class ChannelListController<ExtraData: ExtraDataTypes>: NSObject, NSFetchedResultsControllerDelegate {
+public class ChannelListController<ExtraData: ExtraDataTypes>: Controller, NSFetchedResultsControllerDelegate {
   // MARK: - Public
 
   public var query: ChannelListQuery
 
   public weak var delegate: ChannelListControllerDelegate?
 
-  public private(set) lazy var channels: [ChannelModel<ExtraData>] = { fatalError("Call `startUpdating` first") }()
+  public private(set) lazy var channels: [ChannelModel<ExtraData>] = {
+    assertionFailure("Accessing `channels` before calling `startUpdating()` always results in an empty array.")
+    return []
+  }()
 
   /// Synchronously loads the data for the referenced object form the local cache and starts observing its changes.
   ///
@@ -25,6 +28,7 @@ public class ChannelListController<ExtraData: ExtraDataTypes>: NSObject, NSFetch
   /// `ChannelReference` uses the `delegate` methods to inform about the changes.
   public func startUpdating() {
     try! fetchResultsController.performFetch()
+    fetchResultsController.delegate = self
 
     channels = fetchResultsController.fetchedObjects!.map(ChannelModel<ExtraData>.init)
     delegate?.controllerDidChangeChannels(changes: [])
@@ -87,18 +91,10 @@ extension Client {
   ///
   public func channelListController(query: ChannelListQuery) -> ChannelListController<ExtraData> {
     let worker = ChannelQuerryUpdater<ExtraData>(
-      storageContext: persistentContainer.writableContext,
+      database: persistentContainer,
       webSocketClient: webSocketClient,
       apiClient: apiClient
     )
     return .init(query: query, viewContext: persistentContainer.viewContext, worker: worker)
   }
-}
-
-// WIP!
-public enum Change<T> {
-  case added(_ item: T)
-  case updated(_ item: T)
-  case moved(_ item: T)
-  case removed(_ item: T)
 }

@@ -23,14 +23,6 @@ public class ClientError: Error {
 }
 
 extension ClientError {
-  // An example of a simple error
-
-  public class MissingLocalStorageURL: ClientError {
-    public let localizedDescription: String = "The URL provided in ChatClientConfig is `nil`."
-  }
-
-  // An example of more complex error handling
-
   public class Unexpect: ClientError {
     public private(set) lazy var localizedDescription: String = "Unexpect error: \(String(describing: underlyingError))"
 

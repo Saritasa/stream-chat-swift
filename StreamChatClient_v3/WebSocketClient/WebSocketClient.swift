@@ -5,28 +5,36 @@
 
 import UIKit
 
-public class WebSocketClient {
+class WebSocketClient {
   /// The time interval to ping connection to keep it alive.
   static let pingTimeInterval: TimeInterval = 25
 
-  /// A WebSocket connection callback.
-  private var engine: WebSocketEngine
+  /// The notification center `WebSocketClient` uses to send notification about incoming events.
+  let notificationCenter: NotificationCenter
+
+  // This should probably live somewhere else
+  private(set) var connectionId: String? {
+    didSet {
+      guard let connectionId = connectionId else { return }
+      connectionIdWaiters.forEach { $0(connectionId) }
+      connectionIdWaiters.removeAll()
+    }
+  }
+
+  private var connectionIdWaiters: [(String) -> Void] = []
+
+  /// The decoder used to decode incoming events
+  private let eventDecoder: AnyEventDecoder
+
+  /// The web socket engine used to make the actual WS connection
+  private let engine: WebSocketEngine
+
   private let options: WebSocketOptions = []
 
   private var consecutiveFailures: TimeInterval = 0
   private var shouldReconnect = false
 
   private var backgroundTask: UIBackgroundTaskIdentifier = .invalid
-
-  private(set) var connectionId: String? {
-    didSet {
-      guard connectionId != nil else { return }
-      connectionIdWaiters.forEach { $0(connectionId) }
-      connectionIdWaiters.removeAll()
-    }
-  }
-
-  private var connectionIdWaiters: [(String?) -> Void] = []
 
 //  private(set) var eventError: ClientErrorResponse?
 
@@ -37,8 +45,8 @@ public class WebSocketClient {
 //          self?.publishEvent(.connectionChanged(connectionState))
 //  }
 
-  private lazy var handshakeTimer =
-    Timer.scheduleRepeating(
+  private lazy var handshakeTimer = environment.timer
+    .scheduleRepeating(
       timeInterval: WebSocketClient.pingTimeInterval,
       queue: engine.callbackQueue
     ) { [weak self] in
@@ -46,19 +54,32 @@ public class WebSocketClient {
       self?.engine.sendPing()
     }
 
-  private let Timer: Timer.Type = DefaultTimer.self
+  private let environment: Environment
 
   /// Checks if the web socket is connected and `connectionId` is not nil.
   var isConnected: Bool { connectionId != nil && engine.isConnected }
 
-  init(urlRequest: URLRequest) {
-    self.engine = URLSessionWebSocketEngine(request: urlRequest, callbackQueue: .main)
+  struct Environment {
+    var notificationCenter: NotificationCenter = .init()
+    var timer: Timer.Type = DefaultTimer.self
+  }
+
+  init(
+    urlRequest: URLRequest,
+    eventDecoder: AnyEventDecoder,
+    callbackQueue: DispatchQueue,
+    environment: Environment = .init()
+  ) {
+    self.environment = environment
+    self.engine = URLSessionWebSocketEngine(request: urlRequest, callbackQueue: callbackQueue)
+    self.notificationCenter = environment.notificationCenter
+    self.eventDecoder = eventDecoder
     engine.delegate = self
   }
 }
 
 extension WebSocketClient {
-  /// Connect to websocket.
+  /// Connect to web socket.
   /// - Note:
   ///     - Skip if the Internet is not available.
   ///     - Skip if it's already connected.
@@ -178,9 +199,15 @@ extension WebSocketClient: WebSocketEngineDelegate {
     print(message)
 
     do {
-      let dto = try JSONDecoder().decode(ConnectionIdDTO.self, from: message.data(using: .utf8)!)
-      connectionId = dto.connection_id
+      let event = try eventDecoder.decode(data: message.data(using: .utf8)!)
+      notificationCenter.post(Notification(newEventReceived: event, sender: self))
+
+      if let event = event as? HealthCheck {
+        connectionId = event.connectionId
+      }
+
     } catch {
+      print(error)
       print(error)
     }
 
@@ -330,16 +357,6 @@ struct WebSocketOptions: OptionSet {
   }
 }
 
-/// WebSocket Error
-// private struct ErrorContainer: Decodable {
-//    /// A server error was recieved.
-//    let error: ClientErrorResponse
-// }
-
-struct ConnectionIdDTO: Codable {
-  let connection_id: String
-}
-
 // Something like this?
 extension WebSocketClient: ConnectionIdProvider {
   func requestConnectionId(completion: @escaping ((String?) -> Void)) {
@@ -348,5 +365,21 @@ extension WebSocketClient: ConnectionIdProvider {
     } else {
       connectionIdWaiters.append(completion)
     }
+  }
+}
+
+extension Notification.Name {
+  static let NewEventReceived = Notification.Name("co.getStream.chat.core.new_event_received")
+}
+
+extension Notification {
+  private static let eventKey = "co.getStream.chat.core.event_key"
+
+  init(newEventReceived event: Event, sender: Any) {
+    self.init(name: .NewEventReceived, object: sender, userInfo: [Self.eventKey: event])
+  }
+
+  var event: Event? {
+    userInfo?[Self.eventKey] as? Event
   }
 }

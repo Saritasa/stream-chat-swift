@@ -36,6 +36,21 @@ public class UserDTO: NSManagedObject {
 
 // To save the data to the DB
 
+extension UserModel {
+  @discardableResult
+  func save(to context: NSManagedObjectContext) -> UserDTO {
+    let dto = UserDTO.with(id: id, context: context)
+
+    if let extraData = extraData {
+      dto.extraData = try? JSONEncoder.default.encode(extraData)
+    }
+
+    return dto
+  }
+}
+
+// To save the data to the DB
+
 extension MemberEndpointResponse {
   @discardableResult
   func save(to context: NSManagedObjectContext) -> UserDTO {
