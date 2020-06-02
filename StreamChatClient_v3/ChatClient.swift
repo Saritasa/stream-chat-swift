@@ -33,7 +33,7 @@ public protocol ExtraDataTypes {
 }
 
 /// A concrete implementation of `ExtraDataTypes` with the default values.
-public enum DefaultDataTypes: ExtraDataTypes {}
+public struct DefaultDataTypes: ExtraDataTypes {}
 
 /// A convenience typealias for `Client` with the default data types.
 public typealias ChatClient = Client<DefaultDataTypes>
@@ -54,7 +54,7 @@ public final class Client<ExtraData: ExtraDataTypes> {
 
   public convenience init(currentUser: UserModel<ExtraData.User>, config: ChatClientConfig, callbackQueue: DispatchQueue? = nil) {
     // All production workers
-    let workers: [WorkerBuilder] = [
+    let workerBuilders: [WorkerBuilder] = [
       MessageSender.init,
       ChannelEventsHandler<ExtraData>.init
     ]
@@ -62,7 +62,7 @@ public final class Client<ExtraData: ExtraDataTypes> {
     self.init(
       currentUser: currentUser,
       config: config,
-      workers: workers,
+      workerBuilders: workerBuilders,
       callbackQueue: callbackQueue ?? DispatchQueue(label: "io.getstream.chat.core.mainCallbackQueue"),
       environment: .init()
     )
@@ -169,7 +169,7 @@ public final class Client<ExtraData: ExtraDataTypes> {
   init(
     currentUser: UserModel<ExtraData.User>,
     config: ChatClientConfig,
-    workers: [WorkerBuilder],
+    workerBuilders: [WorkerBuilder],
     callbackQueue: DispatchQueue,
     environment: Environment
   ) {
@@ -180,7 +180,7 @@ public final class Client<ExtraData: ExtraDataTypes> {
 
     apiClient.connectionIdProvider = webSocketClient
 
-    self.backgroundWorkers = workers.map { builder in
+    self.backgroundWorkers = workerBuilders.map { builder in
       builder(self.persistentContainer, self.webSocketClient, self.apiClient)
     }
   }

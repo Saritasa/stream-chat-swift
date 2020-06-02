@@ -42,7 +42,7 @@ public class ChannelListController<ExtraData: ExtraDataTypes>: Controller, NSFet
 
   // MARK: - Internal
 
-  private let worker: ChannelQuerryUpdater<ExtraData>
+  private let worker: ChannelQueryUpdater<ExtraData>
   private let viewContext: NSManagedObjectContext
 
   private lazy var fetchResultsController: NSFetchedResultsController<ChannelDTO> = {
@@ -55,7 +55,7 @@ public class ChannelListController<ExtraData: ExtraDataTypes>: Controller, NSFet
     )
   }()
 
-  init(query: ChannelListQuery, viewContext: NSManagedObjectContext, worker: ChannelQuerryUpdater<ExtraData>) {
+  init(query: ChannelListQuery, viewContext: NSManagedObjectContext, worker: ChannelQueryUpdater<ExtraData>) {
     self.viewContext = viewContext
     self.query = query
     self.worker = worker
@@ -90,7 +90,7 @@ extension Client {
   /// - Returns: A new instance of `ChannelController`.
   ///
   public func channelListController(query: ChannelListQuery) -> ChannelListController<ExtraData> {
-    let worker = ChannelQuerryUpdater<ExtraData>(
+    let worker = ChannelQueryUpdater<ExtraData>(
       database: persistentContainer,
       webSocketClient: webSocketClient,
       apiClient: apiClient

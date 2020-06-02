@@ -6,7 +6,7 @@
 import CoreData
 
 /// Makes a channels query call to the backend and updates the local storage with the results.
-class ChannelQuerryUpdater<ExtraData: ExtraDataTypes>: Worker {
+class ChannelQueryUpdater<ExtraData: ExtraDataTypes>: Worker {
   /// Makes a channels query call to the backend and updates the local storage with the results.
   ///
   /// - Parameters:
