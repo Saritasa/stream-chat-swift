@@ -33,7 +33,8 @@ class ChatClientTests: XCTestCase {
       return DatabaseContainerMock()
     }
 
-    _ = ChatClient(currentUser: user, config: config, workers: [], callbackQueue: queue, environment: env).persistentContainer
+    _ = ChatClient(currentUser: user, config: config, workerBuilders: [], callbackQueue: queue, environment: env)
+      .persistentContainer
 
     XCTAssertEqual(usedDatabaseKind, .onDisk(databaseFileURL: storeFolderURL.appendingPathComponent(user.id)))
   }
@@ -50,7 +51,8 @@ class ChatClientTests: XCTestCase {
       return DatabaseContainerMock()
     }
 
-    _ = ChatClient(currentUser: user, config: config, workers: [], callbackQueue: queue, environment: env).persistentContainer
+    _ = ChatClient(currentUser: user, config: config, workerBuilders: [], callbackQueue: queue, environment: env)
+      .persistentContainer
 
     XCTAssertEqual(usedDatabaseKind, .inMemory)
   }
@@ -78,7 +80,8 @@ class ChatClientTests: XCTestCase {
       return DatabaseContainerMock()
     }
 
-    _ = ChatClient(currentUser: user, config: config, workers: [], callbackQueue: queue, environment: env).persistentContainer
+    _ = ChatClient(currentUser: user, config: config, workerBuilders: [], callbackQueue: queue, environment: env)
+      .persistentContainer
 
     XCTAssertEqual(
       usedDatabaseKinds,

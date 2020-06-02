@@ -11,6 +11,8 @@ public protocol Event {
   static var eventRawType: String { get }
 }
 
+// WIP
+
 extension ChannelModel {
   init(from eventResponseChannel: EventResponse<ExtraData>.Channel<ExtraData>) {
     id = eventResponseChannel.id
