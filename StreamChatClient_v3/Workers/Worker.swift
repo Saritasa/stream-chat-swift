@@ -18,7 +18,7 @@ class Worker: NSObject { // TODO: remove NSObject
   unowned let webSocketClient: WebSocketClient
   unowned let apiClient: APIClient
 
-  init(database: DatabaseContainer, webSocketClient: WebSocketClient, apiClient: APIClient) {
+  required init(database: DatabaseContainer, webSocketClient: WebSocketClient, apiClient: APIClient) {
     self.database = database
     self.webSocketClient = webSocketClient
     self.apiClient = apiClient
@@ -29,7 +29,7 @@ class Worker: NSObject { // TODO: remove NSObject
 /// A convenience superclass for all event-based workers. Not meant to be used directly. Override `handleNewEvent(event: Event)`
 /// and provide your custom logic there.
 class EventHandlerWorker<ExtraData: ExtraDataTypes>: Worker {
-  override init(database: DatabaseContainer, webSocketClient: WebSocketClient, apiClient: APIClient) {
+  required init(database: DatabaseContainer, webSocketClient: WebSocketClient, apiClient: APIClient) {
     super.init(database: database, webSocketClient: webSocketClient, apiClient: apiClient)
 
     webSocketClient.notificationCenter

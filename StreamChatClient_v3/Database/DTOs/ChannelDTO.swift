@@ -18,6 +18,8 @@ class ChannelDTO: NSManagedObject {
   // This should eventually use `MemberDTO` when we have it
   @NSManaged fileprivate var members: Set<UserDTO>
 
+  @NSManaged fileprivate var queries: Set<ChannelListQueryDTO>
+
   static func load(id: String, context: NSManagedObjectContext) -> ChannelDTO? {
     let request = NSFetchRequest<ChannelDTO>(entityName: ChannelDTO.entityName)
     request.predicate = NSPredicate(format: "id == %@", id)
@@ -48,7 +50,10 @@ extension NSManagedObjectContext {
     }
   }
 
-  func saveChannel<ExtraData: ExtraDataTypes>(endpointResponse response: ChannelEndpointResponse<ExtraData>) {
+  func saveChannel<ExtraData: ExtraDataTypes>(
+    endpointResponse response: ChannelEndpointResponse<ExtraData>,
+    query: String?
+  ) {
     let dto = ChannelDTO.loadOrCreate(id: response.channel.id, context: self)
     if let extraData = response.channel.extraData {
       dto.extraData = try? JSONEncoder.default.encode(extraData)
@@ -58,6 +63,11 @@ extension NSManagedObjectContext {
     response.members.map { $0.user }.forEach {
       let user: UserDTO = saveUser(endpointResponse: $0)
       dto.members.insert(user)
+    }
+
+    if let sha = query {
+      let shaDTO = ChannelListQueryDTO.loadOrCreate(sha: sha, context: self)
+      dto.queries.insert(shaDTO)
     }
   }
 
@@ -71,7 +81,14 @@ extension NSManagedObjectContext {
       extraData = try? JSONDecoder.default.decode(ExtraData.Channel.self, from: dtoExtraData)
     }
 
-    return ChannelModel<ExtraData>(id: dto.id, extraData: extraData, members: Set(members))
+    let queries = dto.queries.map { $0.sha }
+
+    return ChannelModel<ExtraData>(
+      id: dto.id,
+      extraData: extraData,
+      members: Set(members),
+      queries: Set(queries)
+    )
   }
 }
 
@@ -91,5 +108,6 @@ extension ChannelModel: LoadableEntity {
   init(fromDTO entity: ChannelDTO) {
     id = entity.id
     members = Set(entity.members.map(UserModel<ExtraData.User>.init))
+    queries = Set(entity.queries.map { $0.sha })
   }
 }

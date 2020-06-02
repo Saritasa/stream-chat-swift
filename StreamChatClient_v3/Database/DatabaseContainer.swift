@@ -105,8 +105,16 @@ protocol DatabaseSession {
   // MARK: -  Channel model
 
   func saveChannel<ExtraData: ExtraDataTypes>(_ channel: ChannelModel<ExtraData>)
-  func saveChannel<ExtraData: ExtraDataTypes>(endpointResponse response: ChannelEndpointResponse<ExtraData>)
+  func saveChannel<ExtraData: ExtraDataTypes>(endpointResponse response: ChannelEndpointResponse<ExtraData>, query: String?)
   func loadChannel<ExtraData: ExtraDataTypes>(id: String) -> ChannelModel<ExtraData>?
+
+  func saveChannelListQuery(_ sha: String)
+}
+
+extension DatabaseSession {
+  func saveChannel<ExtraData: ExtraDataTypes>(endpointResponse response: ChannelEndpointResponse<ExtraData>) {
+    saveChannel(endpointResponse: response, query: nil)
+  }
 }
 
 protocol LoadableEntity {

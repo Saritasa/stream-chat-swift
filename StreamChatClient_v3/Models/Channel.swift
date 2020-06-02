@@ -12,6 +12,8 @@ public struct ChannelModel<ExtraData: ExtraDataTypes> {
   public var extraData: ExtraData.Channel?
 
   public let members: Set<UserModel<ExtraData.User>>
+
+  public let queries: Set<String>!
 }
 
 /// A convenience `ChannelModel` typealias with no additional channel data.

@@ -18,5 +18,7 @@ extension ChannelModel {
     id = eventResponseChannel.id
     extraData = eventResponseChannel.extraData
     members = Set(eventResponseChannel.members.map(UserModel.init))
+    // TODO: channel queries?
+    queries = nil
   }
 }

@@ -5,9 +5,19 @@
         <attribute name="id" optional="YES" attributeType="String"/>
         <attribute name="name" optional="YES" attributeType="String"/>
         <relationship name="members" toMany="YES" deletionRule="Nullify" destinationEntity="UserDTO" inverseName="channels" inverseEntity="UserDTO"/>
+        <relationship name="queries" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ChannelListQueryDTO" inverseName="channels" inverseEntity="ChannelListQueryDTO"/>
         <uniquenessConstraints>
             <uniquenessConstraint>
                 <constraint value="id"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
+    </entity>
+    <entity name="ChannelListQueryDTO" representedClassName="ChannelListQueryDTO" syncable="YES">
+        <attribute name="sha" attributeType="String"/>
+        <relationship name="channels" toMany="YES" deletionRule="Nullify" destinationEntity="ChannelDTO" inverseName="queries" inverseEntity="ChannelDTO"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="sha"/>
             </uniquenessConstraint>
         </uniquenessConstraints>
     </entity>
@@ -32,8 +42,9 @@
         </uniquenessConstraints>
     </entity>
     <elements>
-        <element name="ChannelDTO" positionX="0" positionY="45" width="128" height="103"/>
+        <element name="ChannelDTO" positionX="0" positionY="45" width="128" height="118"/>
         <element name="MessageDTO" positionX="27" positionY="72" width="128" height="88"/>
         <element name="UserDTO" positionX="-36" positionY="9" width="128" height="88"/>
+        <element name="ChannelListQueryDTO" positionX="0" positionY="72" width="128" height="73"/>
     </elements>
 </model>

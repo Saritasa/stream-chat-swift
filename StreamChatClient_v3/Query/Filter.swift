@@ -228,6 +228,14 @@ public extension Filter {
   }
 }
 
+extension Filter {
+  var sha256: String {
+    let data = try! JSONEncoder.default.encode(self)
+    let stringRepresentation = String(data: data, encoding: .utf8)!
+    return stringRepresentation.sha256
+  }
+}
+
 // MARK: - Current User
 
 //

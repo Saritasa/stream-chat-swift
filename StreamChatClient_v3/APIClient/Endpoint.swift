@@ -14,7 +14,7 @@ struct Endpoint {
 }
 
 extension Endpoint {
-  enum Method: String {
+  enum Method: String, Equatable {
     case get = "GET"
     case post = "POST"
     case delete = "DELETE"

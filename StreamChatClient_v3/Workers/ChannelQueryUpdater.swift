@@ -21,7 +21,7 @@ class ChannelQueryUpdater<ExtraData: ExtraDataTypes>: Worker {
       case .success(let channelListDTO):
         self.database.write { session in
           channelListDTO.channels.forEach {
-            session.saveChannel(endpointResponse: $0)
+            session.saveChannel(endpointResponse: $0, query: channelListQuery.filter.sha256)
           }
         }
 

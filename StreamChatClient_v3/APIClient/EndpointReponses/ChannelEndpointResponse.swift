@@ -15,6 +15,11 @@ struct ChannelEndpointResponse<ExtraData: ExtraDataTypes>: Decodable {
       case members
     }
 
+    init(id: String, extraData: ExtraData.Channel?) {
+      self.id = id
+      self.extraData = extraData
+    }
+
     init(from decoder: Decoder) throws {
       let container = try decoder.container(keyedBy: CodingKeys.self)
       id = try container.decode(String.self, forKey: .id)
@@ -22,8 +27,13 @@ struct ChannelEndpointResponse<ExtraData: ExtraDataTypes>: Decodable {
     }
   }
 
-  public let channel: Channel<ExtraData>
-  public let members: [MemberEndpointResponse<ExtraData.User>]
+  let channel: Channel<ExtraData>
+  let members: [MemberEndpointResponse<ExtraData.User>]
+
+  init(channel: Channel<ExtraData>, members: [MemberEndpointResponse<ExtraData.User>]) {
+    self.channel = channel
+    self.members = members
+  }
 
   private enum CodingKeys: String, CodingKey {
     case channel

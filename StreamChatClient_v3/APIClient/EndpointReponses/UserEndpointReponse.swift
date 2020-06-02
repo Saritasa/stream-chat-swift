@@ -66,6 +66,28 @@ struct UserEndpointReponse<ExtraData: Codable & Hashable>: Decodable, Hashable {
     self.isBanned = try container.decodeIfPresent(Bool.self, forKey: .isBanned) ?? false
     self.extraData = try? ExtraData(from: decoder)
   }
+
+  init(
+    id: String,
+    role: Role,
+    extraData: ExtraData,
+    created: Date,
+    updated: Date,
+    lastActiveDate: Date?,
+    isInvisible: Bool,
+    isOnline: Bool,
+    isBanned: Bool
+  ) {
+    self.id = id
+    self.role = role
+    self.extraData = extraData
+    self.created = created
+    self.updated = updated
+    self.lastActiveDate = lastActiveDate
+    self.isInvisible = isInvisible
+    self.isOnline = isOnline
+    self.isBanned = isBanned
+  }
 }
 
 extension UserModel {

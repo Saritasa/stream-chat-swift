@@ -13,18 +13,6 @@ class APIClient {
   // Must be weak??
   weak var connectionIdProvider: ConnectionIdProvider?
 
-  init(apiKey: String, baseURL: URL, sessionConfiguration: URLSessionConfiguration) {
-    self.apiKey = apiKey
-    self.baseURL = baseURL
-    self.session = URLSession(configuration: sessionConfiguration)
-  }
-}
-
-protocol ConnectionIdProvider: AnyObject {
-  func requestConnectionId(completion: @escaping (_ connectionId: String?) -> Void)
-}
-
-extension APIClient {
   // MARK: - Request
 
   /// Send a request.
@@ -62,6 +50,18 @@ extension APIClient {
     }
   }
 
+  init(apiKey: String, baseURL: URL, sessionConfiguration: URLSessionConfiguration) {
+    self.apiKey = apiKey
+    self.baseURL = baseURL
+    self.session = URLSession(configuration: sessionConfiguration)
+  }
+}
+
+protocol ConnectionIdProvider: AnyObject {
+  func requestConnectionId(completion: @escaping (_ connectionId: String?) -> Void)
+}
+
+extension APIClient {
   private func requestURL(for endpoint: Endpoint, queryItems: [URLQueryItem]) -> Result<URL, Error> {
     var urlComponents = URLComponents()
     urlComponents.scheme = baseURL.scheme
