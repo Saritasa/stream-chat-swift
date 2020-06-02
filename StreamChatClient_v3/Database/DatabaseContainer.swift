@@ -17,8 +17,16 @@ class DatabaseContainer: NSPersistentContainer {
     case onDisk(databaseFileURL: URL)
   }
 
-  private lazy var writableContext: NSManagedObjectContext = {
+  lazy var writableContext: NSManagedObjectContext = {
     let context = newBackgroundContext()
+    context.automaticallyMergesChangesFromParent = true
+    context.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+    return context
+  }()
+
+  lazy var backgroundReadOnlyContext: NSManagedObjectContext = {
+    let context = newBackgroundContext()
+    context.automaticallyMergesChangesFromParent = true
     context.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
     return context
   }()
@@ -104,4 +112,12 @@ protocol DatabaseSession {
 protocol LoadableEntity {
   associatedtype DTOEntity
   init(fromDTO entity: DTOEntity)
+}
+
+// WIP
+
+class ReadOnlyContext: NSManagedObjectContext {
+  override func save() throws {
+    fatalError("This context is read only!")
+  }
 }

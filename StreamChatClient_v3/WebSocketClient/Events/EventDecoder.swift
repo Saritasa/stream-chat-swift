@@ -10,8 +10,7 @@ struct EventDecoder<ExtraData: ExtraDataTypes> {
   /// All supported event types by this decoder.
   let eventParsers: [(EventResponse<ExtraData>) throws -> Event?] = [
     HealthCheck.init,
-    AddedToChannel.init,
-    RemovedFromChannel.init
+    AddedToChannel.init
   ]
 
   func decode(data: Data) throws -> Event {

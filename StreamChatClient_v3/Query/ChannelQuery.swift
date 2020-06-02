@@ -6,7 +6,7 @@
 import Foundation
 
 /// A channel query.
-public struct ChannelQuery: Encodable {
+public struct ChannelQuery<ExtraData: ExtraDataTypes>: Encodable {
   private enum CodingKeys: String, CodingKey {
     case data
     case messages
@@ -15,7 +15,7 @@ public struct ChannelQuery: Encodable {
   }
 
   /// A channel.
-  public let channel: Channel
+  public let channel: ChannelModel<ExtraData>
   /// A pagination for messages (see `Pagination`).
   public let messagesPagination: Pagination
   /// A pagination for members (see `Pagination`). You can use `.limit` and `.offset`.
@@ -33,7 +33,7 @@ public struct ChannelQuery: Encodable {
   ///   - membersPagination: a pagination for members. You can use `.limit` and `.offset`.
   ///   - watchersPagination: a pagination for watchers. You can use `.limit` and `.offset`.
   ///   - options: a query options (see `QueryOptions`).
-  public init(channel: Channel,
+  public init(channel: ChannelModel<ExtraData>,
               messagesPagination: Pagination = [],
               membersPagination: Pagination = [],
               watchersPagination: Pagination = [],

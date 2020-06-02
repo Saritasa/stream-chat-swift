@@ -29,19 +29,3 @@ public struct AddedToChannel<ExtraData: ExtraDataTypes>: ChannelEvent {
     self.channel = channel
   }
 }
-
-// DUMMY EXAMPLE!!!
-public struct RemovedFromChannel<ExtraData: ExtraDataTypes>: ChannelEvent {
-  public static var eventRawType: String { "notification.removed_from_channel" }
-
-//  public let member: MemberModel<ExtraData.User>
-  public let channel: ChannelModel<ExtraData>
-
-  init?(from eventResponse: EventResponse<ExtraData>) throws {
-    guard eventResponse.eventType == Self.eventRawType else { return nil }
-    guard let channel = eventResponse.channel else {
-      throw ClientError.EventDecodingError("`chnannel` field can't be `nil` for the RemovedFromChannel event.")
-    }
-    self.channel = ChannelModel(from: channel)
-  }
-}

@@ -12,7 +12,7 @@ import StreamChatClient_v3
 class MasterViewController: UITableViewController, ChannelListControllerDelegate {
 
     lazy var channelListController = chatClient
-        .channelListController(query: ChannelListQuery(filter: .in("members", ["broken-waterfall-5"])))
+        .channelListController(query: ChannelListQuery(filter: .in("members", ["broken-waterfall-5"]), options: [.watch]))
     
     var detailViewController: DetailViewController? = nil
 
