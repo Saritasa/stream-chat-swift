@@ -33,6 +33,7 @@
 		79280F7A248918FD00CDEB89 /* StarscreamWebSocketEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79280F79248918FD00CDEB89 /* StarscreamWebSocketEngine.swift */; };
 		79280F712487CD2B00CDEB89 /* Atomic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79280F6F2487CD2B00CDEB89 /* Atomic.swift */; };
 		79280F732487CD3100CDEB89 /* Atomic_tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79280F702487CD2B00CDEB89 /* Atomic_tests.swift */; };
+		79280F6E2487CB3400CDEB89 /* WebSocketClient_tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79280F6C2487CB1C00CDEB89 /* WebSocketClient_tests.swift */; };
 		79280F7D24891B1300CDEB89 /* WebSocketEngine_tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79280F7B24891B0F00CDEB89 /* WebSocketEngine_tests.swift */; };
 		79280F8224891C6A00CDEB89 /* VirtualTimers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79280F7F24891C6A00CDEB89 /* VirtualTimers.swift */; };
 		79280F8324891C6A00CDEB89 /* VirtualTime_tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79280F8024891C6A00CDEB89 /* VirtualTime_tests.swift */; };
@@ -458,6 +459,7 @@
 		79280F79248918FD00CDEB89 /* StarscreamWebSocketEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StarscreamWebSocketEngine.swift; sourceTree = "<group>"; };
 		79280F6F2487CD2B00CDEB89 /* Atomic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Atomic.swift; sourceTree = "<group>"; };
 		79280F702487CD2B00CDEB89 /* Atomic_tests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Atomic_tests.swift; sourceTree = "<group>"; };
+		79280F6C2487CB1C00CDEB89 /* WebSocketClient_tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSocketClient_tests.swift; sourceTree = "<group>"; };
 		79280F7B24891B0F00CDEB89 /* WebSocketEngine_tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSocketEngine_tests.swift; sourceTree = "<group>"; };
 		79280F7F24891C6A00CDEB89 /* VirtualTimers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VirtualTimers.swift; sourceTree = "<group>"; };
 		79280F8024891C6A00CDEB89 /* VirtualTime_tests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VirtualTime_tests.swift; sourceTree = "<group>"; };
@@ -1083,6 +1085,7 @@
 				79280F402484F4DD00CDEB89 /* Events */,
 				79280F76248917EB00CDEB89 /* Engine */,
 				799C9444247D3DD2001F1104 /* WebSocketClient.swift */,
+				79280F6C2487CB1C00CDEB89 /* WebSocketClient_tests.swift */,
 				799BE2E9248A8C9D00DAC8A0 /* WebSocketReconnectionStrategy.swift */,
 				799BE2EB248A8CB300DAC8A0 /* WebSocketReconnectionStrategy_tests.swift */,
 				797A756324814E7A003CF16D /* WebSocketPayload.swift */,
@@ -2370,6 +2373,7 @@
 				79280F542485529500CDEB89 /* ChannelEventsHandler_tests.swift in Sources */,
 				799C9476247D7E94001F1104 /* TemporaryURLs.swift in Sources */,
 				796610BB248E687000761629 /* EventMiddleware_tests.swift in Sources */,
+				79280F6E2487CB3400CDEB89 /* WebSocketClient_tests.swift in Sources */,
 				799C9469247D791A001F1104 /* AssertResult.swift in Sources */,
 				79280F8224891C6A00CDEB89 /* VirtualTimers.swift in Sources */,
 			);
