@@ -73,6 +73,8 @@
 		796610B5248E518D00761629 /* Starscream.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8AD5EDC122E9BAC5005CFAC9 /* Starscream.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		796610B9248E651800761629 /* EventMiddleware.swift in Sources */ = {isa = PBXBuildFile; fileRef = 796610B8248E651800761629 /* EventMiddleware.swift */; };
 		796610BB248E687000761629 /* EventMiddleware_tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 796610BA248E687000761629 /* EventMiddleware_tests.swift */; };
+		796610BD248E6C2A00761629 /* HealthCheckFilterMiddleware.swift in Sources */ = {isa = PBXBuildFile; fileRef = 796610BC248E6C2A00761629 /* HealthCheckFilterMiddleware.swift */; };
+		796610BF248E6C3B00761629 /* HealthCheckFilterMiddleware_tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 796610BE248E6C3B00761629 /* HealthCheckFilterMiddleware_tests.swift */; };
 		797A756424814E7A003CF16D /* WebSocketPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 797A756324814E7A003CF16D /* WebSocketPayload.swift */; };
 		797A756624814EF8003CF16D /* SystemEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 797A756524814EF8003CF16D /* SystemEnvironment.swift */; };
 		797A756824814F0D003CF16D /* BundleExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 797A756724814F0D003CF16D /* BundleExtensions.swift */; };
@@ -500,6 +502,8 @@
 		7962958B248147430078EB53 /* BaseURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseURL.swift; sourceTree = "<group>"; };
 		796610B8248E651800761629 /* EventMiddleware.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventMiddleware.swift; sourceTree = "<group>"; };
 		796610BA248E687000761629 /* EventMiddleware_tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventMiddleware_tests.swift; sourceTree = "<group>"; };
+		796610BC248E6C2A00761629 /* HealthCheckFilterMiddleware.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthCheckFilterMiddleware.swift; sourceTree = "<group>"; };
+		796610BE248E6C3B00761629 /* HealthCheckFilterMiddleware_tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthCheckFilterMiddleware_tests.swift; sourceTree = "<group>"; };
 		797A756324814E7A003CF16D /* WebSocketPayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSocketPayload.swift; sourceTree = "<group>"; };
 		797A756524814EF8003CF16D /* SystemEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemEnvironment.swift; sourceTree = "<group>"; };
 		797A756724814F0D003CF16D /* BundleExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BundleExtensions.swift; sourceTree = "<group>"; };
@@ -1051,6 +1055,8 @@
 			children = (
 				796610B8248E651800761629 /* EventMiddleware.swift */,
 				796610BA248E687000761629 /* EventMiddleware_tests.swift */,
+				796610BC248E6C2A00761629 /* HealthCheckFilterMiddleware.swift */,
+				796610BE248E6C3B00761629 /* HealthCheckFilterMiddleware_tests.swift */,
 			);
 			path = EventMiddlewares;
 			sourceTree = "<group>";
@@ -2323,6 +2329,7 @@
 				79C750BB248FC4100023F0B7 /* ServerResponseError.swift in Sources */,
 				799BE2EA248A8C9D00DAC8A0 /* WebSocketReconnectionStrategy.swift in Sources */,
 				7962958C248147430078EB53 /* BaseURL.swift in Sources */,
+				796610BD248E6C2A00761629 /* HealthCheckFilterMiddleware.swift in Sources */,
 				792A4F5A24812D1A00EAF71D /* UserEndpointReponse.swift in Sources */,
 				792A4F4F2480EA3B00EAF71D /* Endpoint.swift in Sources */,
 				79280F712487CD2B00CDEB89 /* Atomic.swift in Sources */,
@@ -2364,6 +2371,7 @@
 				79177A2D248A6A2600F053A2 /* AssertAsync+Events.swift in Sources */,
 				799C9468247D791A001F1104 /* AssertJSONEqual.swift in Sources */,
 				799C9460247D77D6001F1104 /* DatabaseContainer_Tests.swift in Sources */,
+				796610BF248E6C3B00761629 /* HealthCheckFilterMiddleware_tests.swift in Sources */,
 				799C945C247D59D8001F1104 /* ChatClient_tests.swift in Sources */,
 				79280F7D24891B1300CDEB89 /* WebSocketEngine_tests.swift in Sources */,
 				799C9462247D78E2001F1104 /* Await.swift in Sources */,
