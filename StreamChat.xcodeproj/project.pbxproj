@@ -33,6 +33,7 @@
 		79280F7A248918FD00CDEB89 /* StarscreamWebSocketEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79280F79248918FD00CDEB89 /* StarscreamWebSocketEngine.swift */; };
 		79280F712487CD2B00CDEB89 /* Atomic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79280F6F2487CD2B00CDEB89 /* Atomic.swift */; };
 		79280F732487CD3100CDEB89 /* Atomic_tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79280F702487CD2B00CDEB89 /* Atomic_tests.swift */; };
+		79280F7D24891B1300CDEB89 /* WebSocketEngine_tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79280F7B24891B0F00CDEB89 /* WebSocketEngine_tests.swift */; };
 		79280F8224891C6A00CDEB89 /* VirtualTimers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79280F7F24891C6A00CDEB89 /* VirtualTimers.swift */; };
 		79280F8324891C6A00CDEB89 /* VirtualTime_tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79280F8024891C6A00CDEB89 /* VirtualTime_tests.swift */; };
 		79280F8424891C6A00CDEB89 /* VirtualTime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79280F8124891C6A00CDEB89 /* VirtualTime.swift */; };
@@ -452,6 +453,7 @@
 		79280F79248918FD00CDEB89 /* StarscreamWebSocketEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StarscreamWebSocketEngine.swift; sourceTree = "<group>"; };
 		79280F6F2487CD2B00CDEB89 /* Atomic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Atomic.swift; sourceTree = "<group>"; };
 		79280F702487CD2B00CDEB89 /* Atomic_tests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Atomic_tests.swift; sourceTree = "<group>"; };
+		79280F7B24891B0F00CDEB89 /* WebSocketEngine_tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSocketEngine_tests.swift; sourceTree = "<group>"; };
 		79280F7F24891C6A00CDEB89 /* VirtualTimers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VirtualTimers.swift; sourceTree = "<group>"; };
 		79280F8024891C6A00CDEB89 /* VirtualTime_tests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VirtualTime_tests.swift; sourceTree = "<group>"; };
 		79280F8124891C6A00CDEB89 /* VirtualTime.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VirtualTime.swift; sourceTree = "<group>"; };
@@ -942,6 +944,7 @@
 			isa = PBXGroup;
 			children = (
 				792A4F38247FFACB00EAF71D /* WebSocketEngine.swift */,
+				79280F7B24891B0F00CDEB89 /* WebSocketEngine_tests.swift */,
 				79280F772489181200CDEB89 /* URLSessionWebSocketEngine.swift */,
 				79280F79248918FD00CDEB89 /* StarscreamWebSocketEngine.swift */,
 			);
@@ -2333,6 +2336,7 @@
 				799C9468247D791A001F1104 /* AssertJSONEqual.swift in Sources */,
 				799C9460247D77D6001F1104 /* DatabaseContainer_Tests.swift in Sources */,
 				799C945C247D59D8001F1104 /* ChatClient_tests.swift in Sources */,
+				79280F7D24891B1300CDEB89 /* WebSocketEngine_tests.swift in Sources */,
 				799C9462247D78E2001F1104 /* Await.swift in Sources */,
 				79280F732487CD3100CDEB89 /* Atomic_tests.swift in Sources */,
 				79280F8424891C6A00CDEB89 /* VirtualTime.swift in Sources */,
