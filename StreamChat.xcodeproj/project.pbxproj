@@ -100,6 +100,7 @@
 		799C947D247E6114001F1104 /* TestError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 799C947B247E6051001F1104 /* TestError.swift */; };
 		79A9E4F72449D3AF00599B95 /* Data+Gzip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A9E4F62449D3AF00599B95 /* Data+Gzip.swift */; };
 		79A9E4F92449DF2D00599B95 /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A9E4F82449DF2D00599B95 /* Reachability.swift */; };
+		79C750BB248FC4100023F0B7 /* ServerResponseError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79C750BA248FC4100023F0B7 /* ServerResponseError.swift */; };
 		79C750BE2490D0130023F0B7 /* ConnectionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79C750BD2490D0130023F0B7 /* ConnectionState.swift */; };
 		79CABAFE2462A4E400240052 /* AtomicTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79324B7A2462A08A00B2597E /* AtomicTests.swift */; };
 		79CABB0724630AC600240052 /* AssertAsync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79CABB0624630AC600240052 /* AssertAsync.swift */; };
@@ -524,6 +525,7 @@
 		799C947B247E6051001F1104 /* TestError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestError.swift; sourceTree = "<group>"; };
 		79A9E4F62449D3AF00599B95 /* Data+Gzip.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Data+Gzip.swift"; sourceTree = "<group>"; };
 		79A9E4F82449DF2D00599B95 /* Reachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
+		79C750BA248FC4100023F0B7 /* ServerResponseError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerResponseError.swift; sourceTree = "<group>"; };
 		79C750BD2490D0130023F0B7 /* ConnectionState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionState.swift; sourceTree = "<group>"; };
 		79CABB0624630AC600240052 /* AssertAsync.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssertAsync.swift; sourceTree = "<group>"; };
 		79CABB0824644C0700240052 /* VirtualTime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VirtualTime.swift; sourceTree = "<group>"; };
@@ -915,6 +917,7 @@
 			isa = PBXGroup;
 			children = (
 				79280F3E2484E3BA00CDEB89 /* ClientError.swift */,
+				79C750BA248FC4100023F0B7 /* ServerResponseError.swift */,
 			);
 			path = Errors;
 			sourceTree = "<group>";
@@ -2293,6 +2296,7 @@
 				792A4F492480107A00EAF71D /* Sorting.swift in Sources */,
 				799C944C247D5766001F1104 /* ChannelController.swift in Sources */,
 				792A4F3F247FFDE700EAF71D /* Codable+Extensions.swift in Sources */,
+				79C750BB248FC4100023F0B7 /* ServerResponseError.swift in Sources */,
 				7962958C248147430078EB53 /* BaseURL.swift in Sources */,
 				792A4F5A24812D1A00EAF71D /* UserEndpointReponse.swift in Sources */,
 				792A4F4F2480EA3B00EAF71D /* Endpoint.swift in Sources */,
