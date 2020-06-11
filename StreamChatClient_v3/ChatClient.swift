@@ -27,9 +27,9 @@ import Foundation
 /// ```
 ///
 public protocol ExtraDataTypes {
-  associatedtype User: Codable & Hashable = NameAndAvatarUserData
+  associatedtype User: UserExtraData = NameAndAvatarUserData
   associatedtype Message: Codable & Hashable = NoExtraMessageData
-  associatedtype Channel: Codable & Hashable = NoExtraChannelData
+  associatedtype Channel: ChannelExtraData = NameAndImageExtraData
 }
 
 /// A concrete implementation of `ExtraDataTypes` with the default values.
@@ -93,9 +93,9 @@ public final class Client<ExtraData: ExtraDataTypes> {
     urlComponents.path = baseURL.wsURL.path.appending("connect")
     urlComponents.queryItems = [URLQueryItem(name: "api_key", value: config.apiKey)]
 
-//      if user.isAnonymous {
-//          urlComponents.queryItems?.append(URLQueryItem(name: "stream-auth-type", value: "anonymous"))
-//      } else {
+    //      if user.isAnonymous {
+    //          urlComponents.queryItems?.append(URLQueryItem(name: "stream-auth-type", value: "anonymous"))
+    //      } else {
     urlComponents.queryItems?.append(URLQueryItem(name: "authorization", value: token))
     urlComponents.queryItems?.append(URLQueryItem(name: "stream-auth-type", value: "jwt"))
     //      }

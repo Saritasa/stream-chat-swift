@@ -35,7 +35,7 @@ class ChannelEventsHandlerTests: XCTestCase {
 
     webSocketClient.simulate(event: event)
 
-    var loadedChannel: Channel? { database.viewContext.loadChannel(id: channel.id) }
+    var loadedChannel: Channel? { database.viewContext.loadChannel(id: channel.id.id) }
     AssertAsync {
       Assert.willBeEqual(loadedChannel?.id, channel.id)
       Assert.willBeEqual(loadedChannel?.members, channel.members)

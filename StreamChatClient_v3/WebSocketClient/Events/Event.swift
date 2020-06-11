@@ -15,8 +15,9 @@ public protocol Event {
 
 extension ChannelModel {
   init(from eventResponseChannel: EventResponse<ExtraData>.Channel<ExtraData>) {
-    id = eventResponseChannel.id
-    extraData = eventResponseChannel.extraData
-    members = Set(eventResponseChannel.members.map(UserModel.init))
+    fatalError()
+//    id = eventResponseChannel.id
+//    extraData = eventResponseChannel.extraData
+//    members = Set(eventResponseChannel.members.map(UserModel.init))
   }
 }

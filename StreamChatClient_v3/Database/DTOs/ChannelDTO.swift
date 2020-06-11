@@ -11,12 +11,21 @@ class ChannelDTO: NSManagedObject {
   static let entityName = "ChannelDTO"
 
   @NSManaged fileprivate var id: String
-  @NSManaged fileprivate var name: String
-
+  @NSManaged fileprivate var typeRawValue: String
   @NSManaged fileprivate var extraData: Data?
+  @NSManaged fileprivate var config: Data
 
-  // This should eventually use `MemberDTO` when we have it
-  @NSManaged fileprivate var members: Set<UserDTO>
+  @NSManaged fileprivate var createdDate: Date
+  @NSManaged fileprivate var deletedDate: Date?
+  @NSManaged fileprivate var lastMessageDate: Date?
+
+  @NSManaged fileprivate var isFrozen: Bool
+
+  // MARK: - Relationships
+
+  @NSManaged fileprivate var createdBy: UserDTO
+  @NSManaged fileprivate var team: TeamDTO?
+  @NSManaged fileprivate var members: Set<MemberDTO>
 
   static func load(id: String, context: NSManagedObjectContext) -> ChannelDTO? {
     let request = NSFetchRequest<ChannelDTO>(entityName: ChannelDTO.entityName)
@@ -37,27 +46,43 @@ class ChannelDTO: NSManagedObject {
 
 extension NSManagedObjectContext {
   func saveChannel<ExtraData: ExtraDataTypes>(_ channel: ChannelModel<ExtraData>) {
-    let dto = ChannelDTO.loadOrCreate(id: channel.id, context: self)
-    if let extraData = channel.extraData {
-      dto.extraData = try? JSONEncoder.default.encode(extraData)
-    }
-
-    channel.members.forEach {
-      let user: UserDTO = self.saveUser($0)
-      dto.members.insert(user)
-    }
+    fatalError()
+//    let dto = ChannelDTO.loadOrCreate(id: channel.id.id, context: self)
+//    if let extraData = channel.extraData {
+//      dto.extraData = try? JSONEncoder.default.encode(extraData)
+//    }
+//
+//    channel.members.forEach {
+//      let user: UserDTO = self.saveUser($0)
+//      dto.members.insert(user)
+//    }
   }
 
-  func saveChannel<ExtraData: ExtraDataTypes>(endpointResponse response: ChannelEndpointResponse<ExtraData>) {
+  func saveChannel<ExtraData: ExtraDataTypes>(endpointResponse response: ChannelEndpointPayload<ExtraData>) {
     let dto = ChannelDTO.loadOrCreate(id: response.channel.id, context: self)
     if let extraData = response.channel.extraData {
       dto.extraData = try? JSONEncoder.default.encode(extraData)
     }
 
+    dto.typeRawValue = response.channel.typeRawValue
+    dto.config = try! JSONEncoder.default.encode(response.channel.config)
+    dto.createdDate = response.channel.created
+    dto.deletedDate = response.channel.deleted
+    dto.lastMessageDate = response.channel.lastMessageDate
+
+    dto.isFrozen = response.channel.isFrozen
+
+    let creatorDTO: UserDTO? = response.channel.createdBy.map { saveUser(endpointResponse: $0) }
+    if let creatorDTO = creatorDTO {
+      dto.createdBy = creatorDTO
+    }
+
+    // TODO: Team
+
     // TEMP
-    response.members.map { $0.user }.forEach {
-      let user: UserDTO = saveUser(endpointResponse: $0)
-      dto.members.insert(user)
+    response.members.forEach {
+      let member: MemberDTO = saveMember(channelId: response.channel.cid, payload: $0)
+      dto.members.insert(member)
     }
   }
 
@@ -71,7 +96,9 @@ extension NSManagedObjectContext {
       extraData = try? JSONDecoder.default.decode(ExtraData.Channel.self, from: dtoExtraData)
     }
 
-    return ChannelModel<ExtraData>(id: dto.id, extraData: extraData, members: Set(members))
+    fatalError()
+
+//    return ChannelModel<ExtraData>(id: dto.id, extraData: extraData, members: Set(members))
   }
 }
 
@@ -88,8 +115,31 @@ extension ChannelModel {
 
 extension ChannelModel: LoadableEntity {
   /// Create a Channel struct from its DTO
-  init(fromDTO entity: ChannelDTO) {
-    id = entity.id
-    members = Set(entity.members.map(UserModel<ExtraData.User>.init))
+  static func create(fromDTO dto: ChannelDTO) -> ChannelModel {
+    let members = dto.members.map { MemberModel<ExtraData.User>.create(fromDTO: $0) }
+
+    let extraData = dto.extraData.flatMap { try? JSONDecoder.default.decode(ExtraData.Channel.self, from: $0) }
+    let channelType = ChannelType(rawValue: dto.typeRawValue)
+
+    return ChannelModel(
+      type: ChannelType(rawValue: dto.typeRawValue),
+      id: ChannelId(type: channelType, id: dto.id),
+      lastMessageDate: dto.lastMessageDate,
+      created: dto.createdDate,
+      deleted: dto.deletedDate,
+      createdBy: UserModel<ExtraData.User>.create(fromDTO: dto.createdBy),
+      config: try! JSONDecoder.default.decode(ChannelConfig.self, from: dto.config),
+      frozen: dto.isFrozen,
+      members: Set(members),
+      watchers: [],
+      team: "",
+      unreadCount: .noUnread,
+      watcherCount: 0,
+      unreadMessageRead: nil,
+      banEnabling: .disabled,
+      isWatched: true,
+      extraData: extraData,
+      invitedMembers: []
+    )
   }
 }

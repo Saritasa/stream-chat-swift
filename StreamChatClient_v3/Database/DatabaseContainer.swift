@@ -99,19 +99,19 @@ protocol DatabaseSession {
   // MARK: -  User model
 
   func saveUser<ExtraUserData: Codable & Hashable>(_ user: UserModel<ExtraUserData>)
-  func saveUser<ExtraUserData: Codable & Hashable>(endpointResponse response: UserEndpointReponse<ExtraUserData>)
+  func saveUser<ExtraUserData: Codable & Hashable>(endpointResponse response: UserEndpointPayload<ExtraUserData>)
   func loadUser<ExtraUserData: Codable & Hashable>(id: String) -> UserModel<ExtraUserData>?
 
   // MARK: -  Channel model
 
   func saveChannel<ExtraData: ExtraDataTypes>(_ channel: ChannelModel<ExtraData>)
-  func saveChannel<ExtraData: ExtraDataTypes>(endpointResponse response: ChannelEndpointResponse<ExtraData>)
+  func saveChannel<ExtraData: ExtraDataTypes>(endpointResponse response: ChannelEndpointPayload<ExtraData>)
   func loadChannel<ExtraData: ExtraDataTypes>(id: String) -> ChannelModel<ExtraData>?
 }
 
 protocol LoadableEntity {
   associatedtype DTOEntity
-  init(fromDTO entity: DTOEntity)
+  static func create(fromDTO entity: DTOEntity) -> Self
 }
 
 // WIP

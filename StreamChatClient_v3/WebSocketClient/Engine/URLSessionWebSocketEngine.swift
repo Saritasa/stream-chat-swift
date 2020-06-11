@@ -86,7 +86,7 @@ final class URLSessionWebSocketEngine: NSObject, WebSocketEngine, URLSessionData
   }
 
   private func disconnect(with error: WebSocketProviderError?) {
-    isConnected = true
+    isConnected = false
     callDelegateInCallbackQueue { $0?.websocketDidDisconnect(error: error) }
   }
 

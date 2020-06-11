@@ -58,7 +58,7 @@ struct EventResponse<ExtraData: ExtraDataTypes>: Decodable {
   struct Channel<ExtraData: ExtraDataTypes>: Decodable {
     let id: String
     let extraData: ExtraData.Channel?
-    let members: [UserEndpointReponse<ExtraData.User>]
+    let members: [UserEndpointPayload<ExtraData.User>]
 
     private enum CodingKeys: String, CodingKey {
       case id = "cid"
@@ -69,7 +69,7 @@ struct EventResponse<ExtraData: ExtraDataTypes>: Decodable {
       let container = try decoder.container(keyedBy: CodingKeys.self)
       id = try container.decode(String.self, forKey: .id)
       extraData = try? ExtraData.Channel(from: decoder)
-      members = try container.decode([MemberEndpointResponse<ExtraData.User>].self, forKey: .members).map { $0.user }
+      members = try container.decode([MemberEndpointPayload<ExtraData.User>].self, forKey: .members).map { $0.user }
     }
   }
 
